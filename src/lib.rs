@@ -43,6 +43,19 @@ fn shorten(uuid: &Uuid, alphabets: Option<&str>) -> Result<ShortUuid, ()> {
 
 #[allow(dead_code, unused_variables)]
 fn expand(short_uuid: String, alphabets: Option<&str>) -> Result<Uuid, ()> {
+    if short_uuid.is_empty() {
+        return Err(())
+    }
+
+    let alpha = alphabets.unwrap_or(DEFAULT_BASE_62); 
+
+    let mut decimal = 0; 
+    let radix = alpha.len();
+
+    for (i, v) in short_uuid.chars().enumerate() {
+        decimal += short_uuid.find(v).unwrap() * radix.pow(i as u32);  
+    }
+
     Ok(Uuid::new_v4())
 }
 
